@@ -4,6 +4,7 @@ import android.Manifest
 import android.os.Build
 import android.webkit.PermissionRequest as WebViewPermissionRequest
 import io.homeassistant.companion.android.common.data.servers.ServerManager
+import io.homeassistant.companion.android.common.util.CheckLocalNetworkPermissionUseCase
 import io.homeassistant.companion.android.common.util.NotificationStatusProvider
 import io.homeassistant.companion.android.common.util.PermissionChecker
 import io.homeassistant.companion.android.common.util.SingleSlotQueue
@@ -44,7 +45,7 @@ internal class PermissionManager @Inject constructor(
     @FcmSupport private val fcmSupport: Boolean,
     private val notificationStatusProvider: NotificationStatusProvider,
     private val permissionChecker: PermissionChecker,
-    // Need for testing to avoid the need of Robolectric
+    private val checkLocalNetworkPermissionUseCase: CheckLocalNetworkPermissionUseCase,
 ) {
 
     private val queue = SingleSlotQueue<PermissionRequest>()
@@ -101,9 +102,13 @@ internal class PermissionManager @Inject constructor(
         if (permissionChecker.hasPermission(Manifest.permission.ACCESS_LOCAL_NETWORK)) return true
 
         Timber.d("Local network permission required, awaiting user response")
-        return queue.awaitResult { onResult ->
+        val granted = queue.awaitResult { onResult ->
             PermissionRequest.LocalNetwork(onResult = onResult)
         }
+        // Idempotent reconcile so the background-work notification (if any) is cleared as soon
+        // as the user grants the permission via this flow.
+        checkLocalNetworkPermissionUseCase()
+        return granted
     }
 
     /**
