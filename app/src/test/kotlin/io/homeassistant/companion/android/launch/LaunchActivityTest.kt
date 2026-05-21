@@ -19,7 +19,6 @@ import io.homeassistant.companion.android.common.util.DisabledLocationHandler
 import io.homeassistant.companion.android.di.ServerManagerModule
 import io.homeassistant.companion.android.sensors.SensorReceiver
 import io.homeassistant.companion.android.sensors.SensorWorker
-import io.homeassistant.companion.android.testing.unit.ConsoleLogRule
 import io.homeassistant.companion.android.util.ChangeLog
 import io.homeassistant.companion.android.websocket.WebsocketManager
 import io.mockk.Runs
@@ -50,10 +49,7 @@ import org.robolectric.annotation.Config
 @HiltAndroidTest
 class LaunchActivityTest {
 
-    @get:Rule(order = 0)
-    val consoleLogRule = ConsoleLogRule()
-
-    @get:Rule(order = 1)
+    @get:Rule
     val hiltRule = HiltAndroidRule(this)
 
     @BindValue

@@ -13,7 +13,6 @@ import io.homeassistant.companion.android.common.data.connectivity.ConnectivityC
 import io.homeassistant.companion.android.common.data.connectivity.ConnectivityCheckState
 import io.homeassistant.companion.android.common.data.keychain.KeyChainRepository
 import io.homeassistant.companion.android.frontend.error.FrontendConnectionError
-import io.homeassistant.companion.android.testing.unit.ConsoleLogExtension
 import io.homeassistant.companion.android.testing.unit.MainDispatcherJUnit5Extension
 import io.homeassistant.companion.android.util.HAWebViewClient
 import io.homeassistant.companion.android.util.HAWebViewClientFactory
@@ -48,7 +47,7 @@ import org.junit.jupiter.params.provider.ValueSource
  * Note: WebView error handling (SSL errors, HTTP errors, WebResource errors) is tested
  * in [io.homeassistant.companion.android.util.HAWebViewClientTest] to avoid duplication.
  */
-@ExtendWith(MainDispatcherJUnit5Extension::class, ConsoleLogExtension::class)
+@ExtendWith(MainDispatcherJUnit5Extension::class)
 @OptIn(ExperimentalCoroutinesApi::class)
 class ConnectionViewModelTest {
 
